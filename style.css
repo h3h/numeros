@@ -63,9 +63,10 @@ input:focus {
   box-shadow: 0 0 0 2px rgba(106, 27, 154, 0.2);
 }
 
-.result {
+.output-group {
+  font-size: 1.2rem;
   min-height: 1.5rem;
   padding: 0.5rem;
   text-align: center;
-  color: #444;
+  color: #6a1b9a;
 }
