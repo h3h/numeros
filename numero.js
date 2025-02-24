@@ -19,7 +19,13 @@ export class Numero {
   validateWords(input, number, gender) {
     input = input.toLowerCase().trim().replace(/\s+/g, ' ')
     const correctWords = this.numberToWords(number, gender)
-    // TODO: handle both genders as correct for hundreds (cuatrocientos casas o cuatrocientas casas)
+
+    // handle both genders as correct for hundreds (“cuatrocientos casas” o “cuatrocientas casas”)
+    const matchMasculineHundreds = /cientos\b/g
+    if (gender === 'f' && matchMasculineHundreds.test(input) && input !== correctWords) {
+      return input.replace(matchMasculineHundreds, 'cientas') === correctWords
+    }
+
     return input === correctWords
   }
 
@@ -27,7 +33,7 @@ export class Numero {
     // Special cases
     if (number === 100) return 'cien'
     if (number === 100000) return 'cien mil'
-    if (number === 1000000) return 'un millón'
+    if (number === 1000000) return 'un millón de'
 
     let words = ''
 
@@ -117,7 +123,11 @@ export class Numero {
     // Hundreds
     const hundred = Math.floor(n / 100)
     if (hundred > 0) {
-      words += hundreds[hundred] + ' '
+      if (gender === 'f') {
+        words += hundreds[hundred].replace(/cientos/, 'cientas') + ' '
+      } else {
+        words += hundreds[hundred] + ' '
+      }
     }
 
     // Tens and units
