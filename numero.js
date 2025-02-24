@@ -1,9 +1,19 @@
 export class Numero {
+  #matchMasculineHundreds = /ientos\b/g
+  #replaceFeminineHundreds = 'ientas'
   #nouns = [
-    { noun: 'perros', gender: 'm', emoji: '🐶' },
+    { noun: 'aviones', gender: 'm', emoji: '✈️' },
+    { noun: 'corazones', gender: 'm', emoji: '❤️' },
+    { noun: 'limones', gender: 'm', emoji: '🍋' },
+    { noun: 'manzanas', gender: 'f', emoji: '🍎' },
+    { noun: 'naranjas', gender: 'f', emoji: '🍊' },
+    { noun: 'peras', gender: 'f', emoji: '🍐' },
+    { noun: 'sandías', gender: 'f', emoji: '🍉' },
     { noun: 'casas', gender: 'f', emoji: '🏠' },
     { noun: 'elefantes', gender: 'm', emoji: '🐘' },
     { noun: 'manos', gender: 'f', emoji: '🖐️' },
+    { noun: 'perros', gender: 'm', emoji: '🐶' },
+    { noun: 'pájaros', gender: 'm', emoji: '🐦' },
   ]
 
   generateOutputSet() {
@@ -21,9 +31,8 @@ export class Numero {
     const correctWords = this.numberToWords(number, gender)
 
     // handle both genders as correct for hundreds (“cuatrocientos casas” o “cuatrocientas casas”)
-    const matchMasculineHundreds = /cientos\b/g
-    if (gender === 'f' && matchMasculineHundreds.test(input) && input !== correctWords) {
-      return input.replace(matchMasculineHundreds, 'cientas') === correctWords
+    if (gender === 'f' && this.#matchMasculineHundreds.test(input) && input !== correctWords) {
+      return input.replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) === correctWords
     }
 
     return input === correctWords
@@ -124,7 +133,7 @@ export class Numero {
     const hundred = Math.floor(n / 100)
     if (hundred > 0) {
       if (gender === 'f') {
-        words += hundreds[hundred].replace(/cientos/, 'cientas') + ' '
+        words += hundreds[hundred].replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) + ' '
       } else {
         words += hundreds[hundred] + ' '
       }

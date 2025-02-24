@@ -13,9 +13,9 @@ describe('Numero', () => {
 
       expect(number).toBeGreaterThanOrEqual(100)
       expect(number).toBeLessThanOrEqual(9999999)
-      expect(['perros', 'casas', 'elefantes', 'manos']).toContain(noun)
+      expect(noun).not.toBe('')
       expect(['m', 'f']).toContain(gender)
-      expect(['🐶', '🏠', '🐘', '🖐️']).toContain(emoji)
+      expect(emoji).not.toBe('')
     })
   })
 
@@ -34,6 +34,7 @@ describe('Numero', () => {
       expect(numero.validateWords('cuatrocientas', 400, 'f')).toBe(true)
       expect(numero.validateWords('novecientos un', 901, 'm')).toBe(true)
       expect(numero.validateWords('novecientas una', 901, 'f')).toBe(true)
+      expect(numero.validateWords('quinientos dos mil', 502000, 'f')).toBe(true)
     })
   })
 
@@ -56,7 +57,8 @@ describe('Numero', () => {
       expect(numero.numberToWords(135000, 'm')).toBe('ciento treinta y cinco mil')
       expect(numero.numberToWords(135000, 'f')).toBe('ciento treinta y cinco mil')
       expect(numero.numberToWords(444000, 'm')).toBe('cuatrocientos cuarenta y cuatro mil')
-      expect(numero.numberToWords(502000, 'f')).toBe('quinientos dos mil')
+      expect(numero.numberToWords(502000, 'f')).toBe('quinientas dos mil')
+      expect(numero.numberToWords(551515, 'f')).toBe('quinientas cincuenta y una mil quinientas quince')
       expect(numero.numberToWords(721000, 'm')).toBe('setecientos veintiún mil')
       expect(numero.numberToWords(721000, 'f')).toBe('setecientas veintiuna mil')
       expect(numero.numberToWords(967000, 'm')).toBe('novecientos sesenta y siete mil')
