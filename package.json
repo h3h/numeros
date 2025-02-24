@@ -1,0 +1,20 @@
+{
+  "name": "numeros",
+  "version": "1.0.0",
+  "description": "An interactive number learning tool.",
+  "author": "Bradford Fults (@h3h)",
+  "license": "MIT",
+  "main": "numero.js",
+  "type": "module",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "transform": {}
+  },
+  "scripts": {
+    "start": "http-server -c-1",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  }
+}

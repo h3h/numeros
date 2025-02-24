@@ -5,13 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Números</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="numeros.js"></script>
+    <script type="module">
+      import { Numero } from './numero.js'
+      import { NumeroDOM } from './numeroDOM.js'
+
+      const numero = new Numero()
+      new NumeroDOM(numero)
+    </script>
   </head>
   <body>
     <div class="container">
-      <h1>Números</h1>
+      <h1>Números con sustantivos</h1>
       <p class="subhead">
-        Escriba las palabras enteras que corresponden al numero.
+        Escriba las palabras enteras que corresponden al número, seguido del sustantivo indicado. Por ejemplo, “veintiún
+        elefantes”
       </p>
       <div class="input-group">
         <h2 id="numero"></h2>
