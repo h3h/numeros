@@ -2,7 +2,10 @@ export class NumeroDOM {
   #currentNoun
   #currentNumber
   #currentGender
+  #currentEmoji
+  #numberInput
   #numero
+  #numeroSet
   #output
   #textInput
   #numeroService
@@ -14,11 +17,16 @@ export class NumeroDOM {
 
   attachDOM() {
     document.addEventListener('DOMContentLoaded', () => {
+      this.#numberInput = document.getElementById('numberInput')
       this.#numero = document.getElementById('numero')
+      this.#numeroSet = document.getElementById('numeroSet')
       this.#output = document.getElementById('output')
       this.#textInput = document.getElementById('textInput')
 
       this.#textInput.addEventListener('keydown', (e) => this.handleInput(e))
+      this.#numeroSet.addEventListener('dblclick', () => this.handleManualEntry())
+      this.#numberInput.addEventListener('keydown', (e) => this.handleNumberInput(e))
+      this.#numberInput.addEventListener('blur', (e) => this.handleNumberInput(e))
 
       this.updatePrompt()
     })
@@ -41,15 +49,44 @@ export class NumeroDOM {
     }
   }
 
+  handleManualEntry() {
+    this.#numeroSet.classList.add('manual-entry')
+    this.#numero.innerText = `${this.#currentNoun} ${this.#currentEmoji}`
+  }
+
+  handleNumberInput(event) {
+    if (event.type === 'blur' || (event.type === 'keydown' && event.key === 'Enter')) {
+      const newValue = event.target.value.replace(/[^\d]+/g, '').trim()
+      this.updateNumber(newValue)
+      this.#numeroSet.classList.remove('manual-entry')
+    } else if (event.key === 'Escape') {
+      this.updateNumber(this.#currentNumber)
+      this.#numeroSet.classList.remove('manual-entry')
+    }
+  }
+
+  updateNumber(number) {
+    this.#currentNumber = number
+    this.#numberInput.value = number
+    this.#clearInputAndOutput()
+    const formattedNumber = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
+    this.#numero.innerText = `${formattedNumber} ${this.#currentNoun} ${this.#currentEmoji}`
+  }
+
   updatePrompt() {
     const [number, noun, gender, emoji] = this.#numeroService.generateOutputSet()
 
-    this.#currentNumber = number
     this.#currentNoun = noun
     this.#currentGender = gender
+    this.#currentEmoji = emoji
 
-    const formattedNumber = number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
-    this.#numero.innerText = `${formattedNumber} ${noun} ${emoji}`
+    this.updateNumber(number)
+  }
+
+  #clearInputAndOutput() {
+    this.#textInput.disabled = false
+    this.#textInput.value = ''
+    this.#output.innerHTML = ''
   }
 
   #showSuccess() {
@@ -69,9 +106,7 @@ export class NumeroDOM {
       // End animation after 2 seconds (assuming 100ms intervals)
       if (count > 20) {
         clearInterval(animation)
-        this.#textInput.disabled = false
-        this.#textInput.value = ''
-        this.#output.innerHTML = ''
+        this.#clearInputAndOutput()
         this.updatePrompt()
       }
     }, 100)

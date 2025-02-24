@@ -44,6 +44,15 @@ h1 {
   margin-bottom: 1rem;
 }
 
+h2 input {
+  display: none;
+  width: 8ex;
+}
+
+h2.manual-entry input {
+  display: inline-block;
+}
+
 h2 {
   text-align: center;
 }
