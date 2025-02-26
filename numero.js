@@ -46,20 +46,29 @@ export class Numero {
 
     let words = ''
 
-    // Millions
     const millions = Math.floor(number / 1000000)
-    if (millions > 0) {
-      words += millions === 1 ? 'un millón ' : this.#getNumberPart(millions, gender) + ' millones '
+    const thousands = Math.floor((number % 1000000) / 1000)
+    const remainder = number % 1000
+
+    // Millions
+    if (millions >= 1000) {
+      const thousandMillions = Math.floor(millions % 1000)
+      words += thousandMillions === 1 ? 'mil ' : this.#getNumberPart(thousandMillions, gender) + ' mil '
+      words += 'millones '
+    } else if (millions > 0) {
+      if (thousands === 0 && remainder === 0) {
+        words += millions === 1 ? 'un millón de ' : this.#getNumberPart(millions, gender) + ' millones de '
+      } else {
+        words += millions === 1 ? 'un millón ' : this.#getNumberPart(millions, gender) + ' millones '
+      }
     }
 
     // Thousands
-    const thousands = Math.floor((number % 1000000) / 1000)
     if (thousands > 0) {
       words += thousands === 1 ? 'mil ' : this.#getNumberPart(thousands, gender) + ' mil '
     }
 
     // Remainder
-    const remainder = number % 1000
     if (remainder > 0 || number === 0) {
       words += this.#getNumberPart(remainder, gender)
     }
@@ -75,17 +84,21 @@ export class Numero {
       [40, 9999], // 15% of the time generate a number less than 10 000
       [55, 99999], // etc.
       [80, 999999],
-      [100, 9999999],
+      [95, 9999999],
+      [100, 9999999999],
     ]
     const random = Math.round(Math.random() * 100)
     scale = scales.find((vals) => {
       return random <= vals[0]
     })[1]
 
-    return floor + Math.round(Math.random() * scale)
+    return Math.min(floor + Math.round(Math.random() * scale), scale)
   }
 
   #getNumberPart(n, gender) {
+    if (n > 99999) {
+      throw new Error('Number too large: ' + n)
+    }
     const units = ['', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve']
     const teens = [
       'diez',
@@ -131,8 +144,11 @@ export class Numero {
 
     // Hundreds
     const hundred = Math.floor(n / 100)
+    const remainder = n % 100
     if (hundred > 0) {
-      if (gender === 'f') {
+      if (hundred === 1 && remainder === 1) {
+        words += 'cien '
+      } else if (gender === 'f') {
         words += hundreds[hundred].replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) + ' '
       } else {
         words += hundreds[hundred] + ' '
@@ -140,7 +156,6 @@ export class Numero {
     }
 
     // Tens and units
-    const remainder = n % 100
     if (remainder > 0) {
       if (remainder < 10) {
         let unit = units[remainder]

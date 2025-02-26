@@ -34,6 +34,7 @@ describe('Numero', () => {
       expect(numero.validateWords('cuatrocientas', 400, 'f')).toBe(true)
       expect(numero.validateWords('novecientos un', 901, 'm')).toBe(true)
       expect(numero.validateWords('novecientas una', 901, 'f')).toBe(true)
+      expect(numero.validateWords('novecientos una', 901, 'f')).toBe(true)
       expect(numero.validateWords('quinientos dos mil', 502000, 'f')).toBe(true)
     })
   })
@@ -51,8 +52,9 @@ describe('Numero', () => {
       expect(numero.numberToWords(20300, 'm')).toBe('veinte mil trescientos')
       expect(numero.numberToWords(20354, 'm')).toBe('veinte mil trescientos cincuenta y cuatro')
       expect(numero.numberToWords(100000, 'm')).toBe('cien mil')
-      expect(numero.numberToWords(101000, 'm')).toBe('ciento un mil')
-      expect(numero.numberToWords(101000, 'f')).toBe('ciento una mil')
+      expect(numero.numberToWords(101000, 'm')).toBe('cien un mil')
+      expect(numero.numberToWords(101000, 'f')).toBe('cien una mil')
+      expect(numero.numberToWords(102000, 'f')).toBe('ciento dos mil')
       expect(numero.numberToWords(120000, 'm')).toBe('ciento veinte mil')
       expect(numero.numberToWords(135000, 'm')).toBe('ciento treinta y cinco mil')
       expect(numero.numberToWords(135000, 'f')).toBe('ciento treinta y cinco mil')
@@ -65,10 +67,14 @@ describe('Numero', () => {
       expect(numero.numberToWords(967000, 'f')).toBe('novecientas sesenta y siete mil')
       expect(numero.numberToWords(1000000, 'm')).toBe('un millón de')
       expect(numero.numberToWords(1000000, 'f')).toBe('un millón de')
-      expect(numero.numberToWords(5000000, 'f')).toBe('cinco millones')
+      expect(numero.numberToWords(2000000, 'm')).toBe('dos millones de')
+      expect(numero.numberToWords(5000000, 'f')).toBe('cinco millones de')
       expect(numero.numberToWords(5000005, 'm')).toBe('cinco millones cinco')
       expect(numero.numberToWords(1234567, 'm')).toBe(
         'un millón doscientos treinta y cuatro mil quinientos sesenta y siete'
+      )
+      expect(numero.numberToWords(9999999999, 'f')).toBe(
+        'novecientas noventa y nueve mil millones novecientas noventa y nueve mil novecientas noventa y nueve'
       )
     })
   })

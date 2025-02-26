@@ -56,7 +56,11 @@ export class NumeroDOM {
 
   handleNumberInput(event) {
     if (event.type === 'blur' || (event.type === 'keydown' && event.key === 'Enter')) {
-      const newValue = event.target.value.replace(/[^\d]+/g, '').trim()
+      let newValue = event.target.value.replace(/[^\d]+/g, '').trim()
+      const maxValue = event.target.getAttribute('max')
+      if (parseInt(newValue) >= parseInt(maxValue)) {
+        newValue = maxValue
+      }
       this.updateNumber(newValue)
       this.#numeroSet.classList.remove('manual-entry')
     } else if (event.key === 'Escape') {
