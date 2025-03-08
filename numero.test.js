@@ -73,8 +73,15 @@ describe('Numero', () => {
       expect(numero.numberToWords(1234567, 'm')).toBe(
         'un millón doscientos treinta y cuatro mil quinientos sesenta y siete'
       )
+      expect(numero.numberToWords(1000000000, 'm')).toBe('mil millones')
+      expect(numero.numberToWords(5002853367, 'm')).toBe(
+        'cinco mil dos millones ochocientos cincuenta y tres mil trescientos sesenta y siete'
+      )
+      expect(numero.numberToWords(6007617498, 'm')).toBe(
+        'seis mil siete millones seiscientos diecisiete mil cuatrocientos noventa y ocho'
+      )
       expect(numero.numberToWords(9999999999, 'f')).toBe(
-        'novecientas noventa y nueve mil millones novecientas noventa y nueve mil novecientas noventa y nueve'
+        'nueve mil novecientas noventa y nueve millones novecientas noventa y nueve mil novecientas noventa y nueve'
       )
     })
   })

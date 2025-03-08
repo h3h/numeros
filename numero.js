@@ -46,16 +46,25 @@ export class Numero {
 
     let words = ''
 
+    const thousandMillions = Math.floor(number / 1000000000)
+    const thousandMillionsRemainder = Math.floor((number / 1000000) % 1000)
+
     const millions = Math.floor(number / 1000000)
     const thousands = Math.floor((number % 1000000) / 1000)
     const remainder = number % 1000
 
-    // Millions
-    if (millions >= 1000) {
-      const thousandMillions = Math.floor(millions % 1000)
+    // Thousands of millions
+    if (thousandMillions > 0) {
       words += thousandMillions === 1 ? 'mil ' : this.#getNumberPart(thousandMillions, gender) + ' mil '
+
+      // Thousand millions remainder
+      if (thousandMillionsRemainder > 0) {
+        words += this.#getNumberPart(thousandMillionsRemainder, gender) + ' '
+      }
+
       words += 'millones '
     } else if (millions > 0) {
+      // Millions
       if (thousands === 0 && remainder === 0) {
         words += millions === 1 ? 'un millón de ' : this.#getNumberPart(millions, gender) + ' millones de '
       } else {
