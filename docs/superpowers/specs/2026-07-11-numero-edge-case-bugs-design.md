@@ -33,10 +33,15 @@ no test, because the app's purpose is teaching correct Spanish.
      → `101 000` → *"**cien** un mil"* (want *ciento un mil*).
    - Rule: exactly 100 in any position → `cien`; `101–199` → `ciento …`.
 
-2. **Stateful-regex Heisenbug.** `#matchMasculineHundreds` carries the `/g` flag
-   and is used with `.test()` in `validateWords` (line 34). `RegExp.prototype.test`
-   on a global regex advances `lastIndex` and the instance is reused across calls,
-   so the same input can validate differently on alternating attempts.
+2. **Stateful-regex smell (latent, not live).** `#matchMasculineHundreds` carries
+   the `/g` flag and is used with `.test()` in `validateWords` (line 34).
+   `RegExp.prototype.test` on a global regex advances `lastIndex` on a match, which
+   is the classic source of alternating results across calls. Verified empirically
+   that it does **not** currently misbehave: `numberToWords` (line 31) and the
+   `.replace()` fallback both reset `lastIndex` to 0 before `.test()` runs, so the
+   advance never survives to the next call. Treated as a defensive cleanup (remove
+   the `.test()`/`/g` anti-pattern) with a **guard** test that passes before and
+   after — not a red test.
 
 3. **Gender of the millions multiplier.** `millón/millones` is a masculine noun,
    so the count before it is *always* masculine regardless of the counted noun:
@@ -71,8 +76,9 @@ failure names the rule it broke. Groups:
    `5 000 005` (non-exact) does not.
 5. **`y` placement** — only between tens and units (`treinta y cinco`), never elsewhere.
 6. **Boundaries** — `0`→cero, `1`, `100`, `1000`, `10⁶`, `10⁹`, `9 999 999 999`.
-7. **`validateWords`** — accepts both hundred genders; plus an explicit regression
-   test that calls it twice in a row with the same input to catch the stateful-`/g` bug.
+7. **`validateWords`** — accepts both hundred genders; plus a guard test that calls
+   it twice in a row with the same masculine-hundreds input against a feminine number
+   (both must stay `true`) to lock the stateful-`/g` cleanup.
 8. **`generateOutputSet`** — corrected range assertion (`≤ 9 999 999 999`).
 
 Each corrected assertion that currently reflects a bug becomes a failing test.
