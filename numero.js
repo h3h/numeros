@@ -30,12 +30,14 @@ export class Numero {
     input = input.toLowerCase().trim().replace(/\s+/g, ' ')
     const correctWords = this.numberToWords(number, gender)
 
+    if (input === correctWords) return true
+
     // handle both genders as correct for hundreds (“cuatrocientos casas” o “cuatrocientas casas”)
-    if (gender === 'f' && this.#matchMasculineHundreds.test(input) && input !== correctWords) {
+    if (gender === 'f') {
       return input.replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) === correctWords
     }
 
-    return input === correctWords
+    return false
   }
 
   numberToWords(number, gender) {
