@@ -63,6 +63,11 @@ export class Numero {
       }
 
       words += 'millones '
+
+      // "de" before the noun when the millions are an exact multiple
+      if (thousands === 0 && remainder === 0) {
+        words += 'de '
+      }
     } else if (millions > 0) {
       // Millions
       if (thousands === 0 && remainder === 0) {
