@@ -155,7 +155,7 @@ export class Numero {
     const hundred = Math.floor(n / 100)
     const remainder = n % 100
     if (hundred > 0) {
-      if (hundred === 1 && remainder === 1) {
+      if (hundred === 1 && remainder === 0) {
         words += 'cien '
       } else if (gender === 'f') {
         words += hundreds[hundred].replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) + ' '
