@@ -30,12 +30,14 @@ export class Numero {
     input = input.toLowerCase().trim().replace(/\s+/g, ' ')
     const correctWords = this.numberToWords(number, gender)
 
+    if (input === correctWords) return true
+
     // handle both genders as correct for hundreds (“cuatrocientos casas” o “cuatrocientas casas”)
-    if (gender === 'f' && this.#matchMasculineHundreds.test(input) && input !== correctWords) {
+    if (gender === 'f') {
       return input.replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) === correctWords
     }
 
-    return input === correctWords
+    return false
   }
 
   numberToWords(number, gender) {
@@ -55,20 +57,25 @@ export class Numero {
 
     // Thousands of millions
     if (thousandMillions > 0) {
-      words += thousandMillions === 1 ? 'mil ' : this.#getNumberPart(thousandMillions, gender) + ' mil '
+      words += thousandMillions === 1 ? 'mil ' : this.#getNumberPart(thousandMillions, 'm') + ' mil '
 
       // Thousand millions remainder
       if (thousandMillionsRemainder > 0) {
-        words += this.#getNumberPart(thousandMillionsRemainder, gender) + ' '
+        words += this.#getNumberPart(thousandMillionsRemainder, 'm') + ' '
       }
 
       words += 'millones '
+
+      // "de" before the noun when the millions are an exact multiple
+      if (thousands === 0 && remainder === 0) {
+        words += 'de '
+      }
     } else if (millions > 0) {
       // Millions
       if (thousands === 0 && remainder === 0) {
-        words += millions === 1 ? 'un millón de ' : this.#getNumberPart(millions, gender) + ' millones de '
+        words += millions === 1 ? 'un millón de ' : this.#getNumberPart(millions, 'm') + ' millones de '
       } else {
-        words += millions === 1 ? 'un millón ' : this.#getNumberPart(millions, gender) + ' millones '
+        words += millions === 1 ? 'un millón ' : this.#getNumberPart(millions, 'm') + ' millones '
       }
     }
 
@@ -155,7 +162,7 @@ export class Numero {
     const hundred = Math.floor(n / 100)
     const remainder = n % 100
     if (hundred > 0) {
-      if (hundred === 1 && remainder === 1) {
+      if (hundred === 1 && remainder === 0) {
         words += 'cien '
       } else if (gender === 'f') {
         words += hundreds[hundred].replace(this.#matchMasculineHundreds, this.#replaceFeminineHundreds) + ' '
